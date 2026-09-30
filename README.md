@@ -1,4 +1,4 @@
-# PROJECT_NAME
+# pcbtest9
 
 **English** | [Bahasa Indonesia](README.id.md)
 
@@ -23,7 +23,7 @@ KiCad 10 hardware project.
 1. Click **Use this template → Create a new repository** on GitHub. The repository name
    becomes the KiCad project name (e.g. `sensor-board`).
 2. The **KiCad** workflow runs once:
-   - job **Rename project**: replaces `PROJECT_NAME` with the repository name in file names and contents
+   - job **Rename project**: replaces `pcbtest9` with the repository name in file names and contents
      (`sources/sensor-board/sensor-board.kicad_pro`, `libraries/sensor-board.kicad_sym`, etc.),
      regenerates the root schematic UUID, removes this section from both READMEs and commits the
      result as `github-actions[bot]`
@@ -46,11 +46,11 @@ scripts/init.sh my-project   # no argument: uses the repository folder name
 ## Layout
 
 ```
-sources/PROJECT_NAME/        KiCad project (.kicad_pro/.kicad_sch/.kicad_pcb) + lib tables
+sources/pcbtest9/        KiCad project (.kicad_pro/.kicad_sch/.kicad_pcb) + lib tables
 libraries/
-  PROJECT_NAME.kicad_sym     project-specific symbols
-  PROJECT_NAME.pretty/       project-specific footprints
-  PROJECT_NAME.3dshapes/     3D models (STEP/WRL)
+  pcbtest9.kicad_sym     project-specific symbols
+  pcbtest9.pretty/       project-specific footprints
+  pcbtest9.3dshapes/     3D models (STEP/WRL)
   external/<name>/           external libraries (git submodules)
 scripts/                     init.sh, add/remove-library.sh, mcp-kicad.sh
 .mcp.json, .vscode/, .cursor/ MCP config for AI assistants
@@ -60,7 +60,7 @@ AGENTS.md, CLAUDE.md         instructions for AI agents
 
 The project libraries are registered in the project's `sym-lib-table` / `fp-lib-table` using
 `${KIPRJMOD}/../../libraries/...`, so they keep working wherever the repository is cloned.
-For 3D models, set the footprint model path to `${KIPRJMOD}/../../libraries/PROJECT_NAME.3dshapes/<file>.step`.
+For 3D models, set the footprint model path to `${KIPRJMOD}/../../libraries/pcbtest9.3dshapes/<file>.step`.
 
 The title block uses the text variables `${PROJECT}`, `${REVISION}` and `${CURRENT_DATE}`.
 `REVISION` is `dev` inside KiCad and is filled in by CI from the git tag / commit.
@@ -73,8 +73,8 @@ First ask: **where does the part come from?** That decides the path.
 | --- | --- | --- |
 | in KiCad's built-in libraries | **A.** use it directly | – |
 | in a git repository of a KiCad library | **B.** `scripts/add-library.sh <url>` | `libraries/external/<name>/` (submodule) |
-| a vendor download (SnapEDA, Ultra Librarian, Mouser/DigiKey zip) | **C.** import it | `libraries/PROJECT_NAME.*` |
-| not available anywhere | **D.** draw it | `libraries/PROJECT_NAME.*` |
+| a vendor download (SnapEDA, Ultra Librarian, Mouser/DigiKey zip) | **C.** import it | `libraries/pcbtest9.*` |
+| not available anywhere | **D.** draw it | `libraries/pcbtest9.*` |
 
 ### A. KiCad built-in libraries
 
@@ -124,20 +124,20 @@ Import the files into the project's own library, which is already registered:
 
 | File | Put it in | How |
 | --- | --- | --- |
-| Symbol (`.kicad_sym`) | `libraries/PROJECT_NAME.kicad_sym` | Symbol Editor → select library `PROJECT_NAME` → **File → Import Symbol** |
-| Footprint (`.kicad_mod`) | `libraries/PROJECT_NAME.pretty/` | copy the file, or Footprint Editor → **File → Import Footprint** |
-| 3D model (`.step`) | `libraries/PROJECT_NAME.3dshapes/` | copy the file; in the footprint's **Properties → 3D Models** use `${KIPRJMOD}/../../libraries/PROJECT_NAME.3dshapes/<file>.step` |
+| Symbol (`.kicad_sym`) | `libraries/pcbtest9.kicad_sym` | Symbol Editor → select library `pcbtest9` → **File → Import Symbol** |
+| Footprint (`.kicad_mod`) | `libraries/pcbtest9.pretty/` | copy the file, or Footprint Editor → **File → Import Footprint** |
+| 3D model (`.step`) | `libraries/pcbtest9.3dshapes/` | copy the file; in the footprint's **Properties → 3D Models** use `${KIPRJMOD}/../../libraries/pcbtest9.3dshapes/<file>.step` |
 
-Then set the symbol's **Footprint** field to `PROJECT_NAME:<footprint>`.
+Then set the symbol's **Footprint** field to `pcbtest9:<footprint>`.
 
 > Always check a downloaded footprint against the datasheet (pad size, pitch, pin 1). Footprint
 > mistakes are only discovered once the boards arrive.
 
 ### D. Draw it yourself
 
-1. Symbol Editor → **New Symbol** in library `PROJECT_NAME`. Set every pin's **electrical type**
+1. Symbol Editor → **New Symbol** in library `pcbtest9`. Set every pin's **electrical type**
    (Input, Output, Power input, ...) correctly: ERC relies on it.
-2. Footprint Editor → **New Footprint** in `PROJECT_NAME.pretty`, using the datasheet's recommended
+2. Footprint Editor → **New Footprint** in `pcbtest9.pretty`, using the datasheet's recommended
    land pattern (or the **Footprint Wizard** for standard packages such as QFN or SOIC).
 3. Set the symbol's **Footprint** field and, optionally, a 3D model as in C.
 
@@ -179,8 +179,8 @@ Every push / pull request runs [`kicad.yml`](.github/workflows/kicad.yml) in the
 | Step | Output |
 | --- | --- |
 | ERC, DRC (+ schematic parity) | `reports/erc.rpt`, `reports/drc.rpt` — the job fails on errors |
-| Schematic | `PROJECT_NAME-schematic.pdf`, `PROJECT_NAME-bom.csv` |
-| PCB | `gerbers/` + `PROJECT_NAME-gerbers.zip`, drill + drill map, `PROJECT_NAME-pos.csv`, `PROJECT_NAME-pcb.pdf`, `PROJECT_NAME.step` |
+| Schematic | `pcbtest9-schematic.pdf`, `pcbtest9-bom.csv` |
+| PCB | `gerbers/` + `pcbtest9-gerbers.zip`, drill + drill map, `pcbtest9-pos.csv`, `pcbtest9-pcb.pdf`, `pcbtest9.step` |
 
 Outputs can be downloaded from the **Actions** tab (artifacts). Gerber layers follow the
 **File → Plot** settings saved in the board.

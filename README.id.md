@@ -1,4 +1,4 @@
-# PROJECT_NAME
+# pcbtest9
 
 [English](README.md) | **Bahasa Indonesia**
 
@@ -23,7 +23,7 @@ Proyek perangkat keras KiCad 10.
 1. Klik **Use this template → Create a new repository** di GitHub. Nama repositori
    akan menjadi nama proyek KiCad (misalnya `sensor-board`).
 2. Workflow **KiCad** berjalan satu kali:
-   - job **Rename project** mengganti `PROJECT_NAME` dengan nama repositori, baik pada nama berkas
+   - job **Rename project** mengganti `pcbtest9` dengan nama repositori, baik pada nama berkas
      maupun isi berkas (`sources/sensor-board/sensor-board.kicad_pro`, `libraries/sensor-board.kicad_sym`,
      dan seterusnya), membuat ulang UUID skematik utama, lalu menyimpan perubahan sebagai commit
      `github-actions[bot]`;
@@ -48,11 +48,11 @@ scripts/init.sh nama-proyek   # tanpa argumen: menggunakan nama direktori reposi
 ## Struktur direktori
 
 ```
-sources/PROJECT_NAME/        proyek KiCad (.kicad_pro/.kicad_sch/.kicad_pcb) + tabel pustaka
+sources/pcbtest9/        proyek KiCad (.kicad_pro/.kicad_sch/.kicad_pcb) + tabel pustaka
 libraries/
-  PROJECT_NAME.kicad_sym     simbol khusus proyek
-  PROJECT_NAME.pretty/       footprint khusus proyek
-  PROJECT_NAME.3dshapes/     model 3D (STEP/WRL)
+  pcbtest9.kicad_sym     simbol khusus proyek
+  pcbtest9.pretty/       footprint khusus proyek
+  pcbtest9.3dshapes/     model 3D (STEP/WRL)
   external/<nama>/           pustaka eksternal (git submodule)
 scripts/                     init.sh, add/remove-library.sh, mcp-kicad.sh
 .mcp.json, .vscode/, .cursor/ konfigurasi MCP untuk asisten AI
@@ -62,7 +62,7 @@ AGENTS.md, CLAUDE.md         petunjuk untuk agen AI
 
 Pustaka (*library*) proyek telah terdaftar di `sym-lib-table` dan `fp-lib-table` proyek dengan jalur
 `${KIPRJMOD}/../../libraries/...`, sehingga tetap berfungsi di mana pun repositori diklon.
-Untuk model 3D, isi jalur pada footprint dengan `${KIPRJMOD}/../../libraries/PROJECT_NAME.3dshapes/<berkas>.step`.
+Untuk model 3D, isi jalur pada footprint dengan `${KIPRJMOD}/../../libraries/pcbtest9.3dshapes/<berkas>.step`.
 
 Blok judul (*title block*) menggunakan variabel teks `${PROJECT}`, `${REVISION}`, dan `${CURRENT_DATE}`.
 Nilai `REVISION` di KiCad adalah `dev` dan diisi otomatis oleh CI berdasarkan tag atau commit git.
@@ -75,8 +75,8 @@ Pertama, tentukan **dari mana komponen tersebut berasal**. Jawabannya menentukan
 | --- | --- | --- |
 | di pustaka bawaan KiCad | **A.** langsung digunakan | – |
 | di repositori git pustaka KiCad | **B.** `scripts/add-library.sh <url>` | `libraries/external/<nama>/` (submodule) |
-| dalam berkas unduhan vendor (SnapEDA, Ultra Librarian, zip dari Mouser/DigiKey) | **C.** diimpor | `libraries/PROJECT_NAME.*` |
-| tidak tersedia di mana pun | **D.** dibuat sendiri | `libraries/PROJECT_NAME.*` |
+| dalam berkas unduhan vendor (SnapEDA, Ultra Librarian, zip dari Mouser/DigiKey) | **C.** diimpor | `libraries/pcbtest9.*` |
+| tidak tersedia di mana pun | **D.** dibuat sendiri | `libraries/pcbtest9.*` |
 
 ### A. Pustaka bawaan KiCad
 
@@ -129,20 +129,20 @@ Impor berkas tersebut ke pustaka milik proyek, yang sudah terdaftar:
 
 | Berkas | Simpan di | Cara |
 | --- | --- | --- |
-| Simbol (`.kicad_sym`) | `libraries/PROJECT_NAME.kicad_sym` | Symbol Editor → pilih pustaka `PROJECT_NAME` → **File → Import Symbol** |
-| Footprint (`.kicad_mod`) | `libraries/PROJECT_NAME.pretty/` | salin berkasnya, atau Footprint Editor → **File → Import Footprint** |
-| Model 3D (`.step`) | `libraries/PROJECT_NAME.3dshapes/` | salin berkasnya; pada **Properties → 3D Models** footprint, isi `${KIPRJMOD}/../../libraries/PROJECT_NAME.3dshapes/<berkas>.step` |
+| Simbol (`.kicad_sym`) | `libraries/pcbtest9.kicad_sym` | Symbol Editor → pilih pustaka `pcbtest9` → **File → Import Symbol** |
+| Footprint (`.kicad_mod`) | `libraries/pcbtest9.pretty/` | salin berkasnya, atau Footprint Editor → **File → Import Footprint** |
+| Model 3D (`.step`) | `libraries/pcbtest9.3dshapes/` | salin berkasnya; pada **Properties → 3D Models** footprint, isi `${KIPRJMOD}/../../libraries/pcbtest9.3dshapes/<berkas>.step` |
 
-Setelah itu, isi kolom **Footprint** pada simbol dengan `PROJECT_NAME:<footprint>`.
+Setelah itu, isi kolom **Footprint** pada simbol dengan `pcbtest9:<footprint>`.
 
 > Selalu periksa footprint hasil unduhan terhadap *datasheet* (ukuran *pad*, jarak antarpin, dan posisi
 > pin 1). Kesalahan footprint baru akan diketahui setelah papan tiba dari pabrik.
 
 ### D. Membuat sendiri
 
-1. Symbol Editor → **New Symbol** di pustaka `PROJECT_NAME`. Tentukan **jenis elektrik** setiap pin
+1. Symbol Editor → **New Symbol** di pustaka `pcbtest9`. Tentukan **jenis elektrik** setiap pin
    (Input, Output, Power input, dan sebagainya) dengan benar, karena ERC menggunakannya.
-2. Footprint Editor → **New Footprint** di `PROJECT_NAME.pretty`, sesuai *recommended land pattern*
+2. Footprint Editor → **New Footprint** di `pcbtest9.pretty`, sesuai *recommended land pattern*
    pada *datasheet* (atau gunakan **Footprint Wizard** untuk kemasan standar seperti QFN atau SOIC).
 3. Isi kolom **Footprint** pada simbol dan, jika tersedia, tambahkan model 3D seperti pada langkah C.
 
@@ -186,8 +186,8 @@ Setiap *push* dan *pull request* menjalankan [`kicad.yml`](.github/workflows/kic
 | Tahap | Keluaran |
 | --- | --- |
 | ERC, DRC (+ kesesuaian skematik dan PCB) | `reports/erc.rpt`, `reports/drc.rpt` — job gagal apabila terdapat *error* |
-| Skematik | `PROJECT_NAME-schematic.pdf`, `PROJECT_NAME-bom.csv` |
-| PCB | `gerbers/` + `PROJECT_NAME-gerbers.zip`, berkas bor + peta bor, `PROJECT_NAME-pos.csv`, `PROJECT_NAME-pcb.pdf`, `PROJECT_NAME.step` |
+| Skematik | `pcbtest9-schematic.pdf`, `pcbtest9-bom.csv` |
+| PCB | `gerbers/` + `pcbtest9-gerbers.zip`, berkas bor + peta bor, `pcbtest9-pos.csv`, `pcbtest9-pcb.pdf`, `pcbtest9.step` |
 
 Keluaran dapat diunduh dari tab **Actions** (bagian *artifact*). Lapisan Gerber mengikuti pengaturan
 **File → Plot** yang tersimpan di berkas papan.
